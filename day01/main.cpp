@@ -26,10 +26,7 @@ std::string read_file(const std::filesystem::path& path) {
 {
     int r;
     auto result = std::from_chars(sv.data(), sv.data() + sv.size(), r);
-    if (result.ec == std::errc())
-        return r;
-    else
-        return std::nullopt;
+    return result.ec == std::errc() ? std::optional{r} : std::nullopt;
 }
 
 int rotate(int& cur_pos, std::string_view combination) {
