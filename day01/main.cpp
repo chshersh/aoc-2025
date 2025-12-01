@@ -16,18 +16,13 @@ std::string read_file(const std::filesystem::path& path) {
     return s.str();
 }
 
-template <std::ranges::range R>
-[[nodiscard]] constexpr auto lines(R&& r) {
-    auto trimmed = std::forward<R>(r);
-
+[[nodiscard]] constexpr auto lines(std::string_view sv) {
     // Remove trailing '\n'
-    while (!trimmed.empty() && trimmed.back() == '\n')
-        trimmed.remove_suffix(1);
-
-    return trimmed | std::views::split('\n');
+    while (!sv.empty() && sv.back() == '\n') sv.remove_suffix(1);
+    return sv | std::views::split('\n');
 }
 
-std::optional<int> to_int(std::string_view sv)
+[[nodiscard]] std::optional<int> to_int(std::string_view sv)
 {
     int r;
     auto result = std::from_chars(sv.data(), sv.data() + sv.size(), r);
