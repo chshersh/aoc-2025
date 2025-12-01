@@ -42,3 +42,4 @@
 
 # CMake
 build/
+debug.log

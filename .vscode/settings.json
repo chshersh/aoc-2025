@@ -1,0 +1,17 @@
+{
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.generator": "Unix Makefiles",
+    "cmake.cmakePath": "/usr/bin/cmake",
+    "cmake.buildType": "Debug",
+    "cmake.buildBeforeRun": true,
+    "cmake.debugConfig": {
+      "stopAtEntry": false
+    },
+    "files.associations": {
+      "variant": "cpp",
+      "utility": "cpp",
+      "charconv": "cpp"
+    }
+}
