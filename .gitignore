@@ -43,3 +43,6 @@
 # CMake
 build/
 debug.log
+
+# VSCode
+.vscode/settings.json

@@ -12,6 +12,8 @@
     "files.associations": {
       "variant": "cpp",
       "utility": "cpp",
-      "charconv": "cpp"
+      "charconv": "cpp",
+      "string_view": "cpp",
+      "print": "cpp"
     }
 }
