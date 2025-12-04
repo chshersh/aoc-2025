@@ -65,12 +65,50 @@ long long sum_invalid_ids(std::string_view range) {
     return sum;
 }
 
+bool is_invalid(long long n) {
+    auto id = std::to_string(n);
+
+    for (size_t i = 1; i <= id.size() / 2; ++i) {
+        if (id.size() % i == 0) {
+            auto part = std::string_view{id}.substr(0, i);
+
+            bool is_repeated = true;
+            for (size_t j = i; j < id.size() && is_repeated; j += i) {
+                auto cur_part = std::string_view{id}.substr(j, i);
+                is_repeated &= part == cur_part;
+            }
+
+            if (is_repeated) return true;
+        }
+    }
+
+    return false;
+
+}
+
+long long sum_invalid_ids2(std::string_view range) {
+    const auto delim_pos = range.find_first_of('-');
+    const auto range_start_str = range.substr(0, delim_pos);
+    const auto range_end_str   = range.substr(delim_pos + 1);
+
+    const auto range_start = to_int(range_start_str).value();
+    const auto range_end   = to_int(range_end_str).value();
+
+    long long sum = 0;
+
+    for (long long n = range_start; n <= range_end; ++n) {
+        if (is_invalid(n)) sum += n;
+    }
+
+    return sum;
+}
+
 long long add_invalid(std::string_view contents) {
     long long sum = 0;
 
     for (const auto line : lines(contents)) {
         for (const auto range : line | std::views::split(',')) {
-            sum += sum_invalid_ids(std::string_view{range});
+            sum += sum_invalid_ids2(std::string_view{range});
         }
     }
 
