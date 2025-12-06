@@ -29,7 +29,9 @@ std::string read_file(const std::filesystem::path& path) {
 [[nodiscard]] constexpr auto lines(std::string_view sv) {
     // Remove trailing '\n'
     while (!sv.empty() && sv.back() == '\n') sv.remove_suffix(1);
-    return sv | std::views::split('\n');
+    return sv
+        | std::views::split('\n')
+        | std::views::transform([](auto seq) { return std::string_view{seq}; });
 }
 
 long long solve(std::string_view contents) {

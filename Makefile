@@ -17,3 +17,8 @@ run-day03:
 run-day04:
 	cmake --build --preset default
 	./build/day04/day04 $(FILE)
+
+.PHONY: run-day05
+run-day05:
+	cmake --build --preset default
+	./build/day05/day05 $(FILE)
