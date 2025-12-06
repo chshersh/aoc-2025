@@ -86,7 +86,7 @@ int count_fresh(std::span<IdRange> id_ranges, std::span<long long> product_ids) 
     return fresh;
 }
 
-long long solve(std::string_view contents) {
+long long solve_part1(std::string_view contents) {
     auto all_lines = lines(contents);
     std::vector<IdRange> id_ranges = all_lines
         | std::views::take_while([](auto line){ return !line.empty(); })
@@ -106,6 +106,21 @@ long long solve(std::string_view contents) {
     return count_fresh(compressed_ranges, product_ids);
 }
 
+long long solve_part2(std::string_view contents) {
+    auto all_lines = lines(contents);
+    std::vector<IdRange> id_ranges = all_lines
+        | std::views::take_while([](auto line){ return !line.empty(); })
+        | std::views::transform([](auto sv) { return parse_range(sv); })
+        | std::ranges::to<std::vector>();
+
+    std::ranges::sort(id_ranges);
+    auto compressed_ranges = compress_ranges(id_ranges);
+    auto counts = compressed_ranges
+        | std::views::transform([](IdRange range) { return range.end - range.start + 1; });
+
+    return std::ranges::fold_left(counts, 0, std::plus{});
+}
+
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::println("Usage: program <filepath>");
@@ -115,5 +130,5 @@ int main(int argc, char* argv[]) {
     std::filesystem::path file_path = argv[1];
     auto file_contents = read_file(file_path);
 
-    std::println("{}", solve(file_contents));
+    std::println("{}", solve_part2(file_contents));
 }
