@@ -10,8 +10,6 @@ let cmake day = Printf.sprintf
 
 let main_cpp = Printf.sprintf
 {|// std includes
-#include <print>
-#include <ranges>
 #include <string_view>
 
 // local
@@ -22,7 +20,7 @@ long long solve(std::string_view contents) {
 }
 
 int main(int argc, char* argv[]) {
-    auto file_contents = read_input_file(argc, argv);
+    auto file_contents = aoc::read_input_file(argc, argv);
     std::println("{}", solve(file_contents));
 }
 |}
@@ -44,7 +42,7 @@ let gen day_str =
         write_file ~path:cmake_path (cmake day);
 
         let main_path = Printf.sprintf "%s/main.cpp" day in
-        write_file ~path:main_path (main_cpp day)
+        write_file ~path:main_path main_cpp
     )
 
 (********)
