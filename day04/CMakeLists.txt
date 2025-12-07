@@ -1,1 +1,1 @@
-add_executable(day04 main.cpp)
+add_day(day04 main.cpp)

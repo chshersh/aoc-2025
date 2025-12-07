@@ -1,36 +1,9 @@
+// std includes
 #include <algorithm>
-#include <filesystem>
-#include <fstream>
-#include <print>
-#include <ranges>
-#include <string>
-#include <string_view>
 #include <vector>
 
-std::string read_file(const std::filesystem::path& path) {
-    std::ifstream in(path);
-    if (!in) {
-        throw std::runtime_error("Cannot open file: " + path.string());
-    }
-    std::ostringstream s;
-    s << in.rdbuf();
-    return s.str();
-}
-
-[[nodiscard]] constexpr auto lines(std::string_view sv) {
-    // Remove trailing '\n'
-    while (!sv.empty() && sv.back() == '\n') sv.remove_suffix(1);
-    return sv
-        | std::views::split('\n')
-        | std::views::transform([](auto seq) { return std::string_view{seq}; });
-}
-
-[[nodiscard]] std::optional<long long> to_num(std::string_view sv)
-{
-    long long r;
-    auto result = std::from_chars(sv.data(), sv.data() + sv.size(), r);
-    return result.ec == std::errc() ? std::optional{r} : std::nullopt;
-}
+// local
+#include <aoc_common.hpp>
 
 struct IdRange {
     long long start;
@@ -44,8 +17,8 @@ IdRange parse_range(std::string_view sv) {
     const auto delim_pos   = sv.find_first_of('-');
     const auto range_start = sv.substr(0, delim_pos);
     const auto range_end   = sv.substr(delim_pos + 1);
-    const auto start       = to_num(range_start).value();
-    const auto end         = to_num(range_end).value();
+    const auto start       = aoc::to_ll(range_start);
+    const auto end         = aoc::to_ll(range_end);
     return { start, end };
 }
 
@@ -87,7 +60,7 @@ int count_fresh(std::span<IdRange> id_ranges, std::span<long long> product_ids) 
 }
 
 long long solve_part1(std::string_view contents) {
-    auto all_lines = lines(contents);
+    auto all_lines = aoc::lines(contents);
     std::vector<IdRange> id_ranges = all_lines
         | std::views::take_while([](auto line){ return !line.empty(); })
         | std::views::transform([](auto sv) { return parse_range(sv); })
@@ -96,7 +69,7 @@ long long solve_part1(std::string_view contents) {
     std::vector<long long> product_ids = all_lines
         | std::views::drop_while([](auto line){ return !line.empty(); })
         | std::views::drop(1)
-        | std::views::transform([](auto sv) { return to_num(sv).value(); })
+        | std::views::transform([](auto sv) { return aoc::to_ll(sv); })
         | std::ranges::to<std::vector>();
 
     std::ranges::sort(id_ranges);
@@ -107,7 +80,7 @@ long long solve_part1(std::string_view contents) {
 }
 
 long long solve_part2(std::string_view contents) {
-    auto all_lines = lines(contents);
+    auto all_lines = aoc::lines(contents);
     std::vector<IdRange> id_ranges = all_lines
         | std::views::take_while([](auto line){ return !line.empty(); })
         | std::views::transform([](auto sv) { return parse_range(sv); })
@@ -122,13 +95,6 @@ long long solve_part2(std::string_view contents) {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::println("Usage: program <filepath>");
-        return 1;
-    }
-
-    std::filesystem::path file_path = argv[1];
-    auto file_contents = read_file(file_path);
-
+    auto file_contents = aoc::read_input_file(argc, argv);
     std::println("{}", solve_part2(file_contents));
 }

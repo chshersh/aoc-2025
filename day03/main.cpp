@@ -1,27 +1,8 @@
-#include <filesystem>
-#include <fstream>
-#include <print>
-#include <ranges>
-#include <string>
-#include <string_view>
+// std includes
 #include <unordered_map>
 
-std::string read_file(const std::filesystem::path& path) {
-    std::ifstream in(path);
-    if (!in) {
-        throw std::runtime_error("Cannot open file: " + path.string());
-    }
-    std::ostringstream s;
-    s << in.rdbuf();
-    return s.str();
-}
-
-[[nodiscard]] constexpr auto lines(std::string_view sv) {
-    // Remove trailing '\n'
-    while (!sv.empty() && sv.back() == '\n') sv.remove_suffix(1);
-    return sv | std::views::split('\n');
-}
-
+// local
+#include <aoc_common.hpp>
 
 int to_digit(char c) { return c - '0'; }
 
@@ -58,21 +39,14 @@ long long max_joltage2(std::string_view bank, size_t start, size_t len, long lon
 long long solve(std::string_view contents) {
     long long sum = 0;
 
-    for (auto line : lines(contents)) {
-        sum += max_joltage2(std::string_view{line}, 0, 12, 0);;
+    for (auto line : aoc::lines(contents)) {
+        sum += max_joltage2(line, 0, 12, 0);;
     }
 
     return sum;
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::println("Usage: program <filepath>");
-        return 1;
-    }
-
-    std::filesystem::path file_path = argv[1];
-    auto file_contents = read_file(file_path);
-
+    auto file_contents = aoc::read_input_file(argc, argv);
     std::println("{}", solve(file_contents));
 }

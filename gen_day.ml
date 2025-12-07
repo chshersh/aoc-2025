@@ -5,48 +5,24 @@
 (*******************)
 
 let cmake day = Printf.sprintf
-{|add_executable(%s main.cpp)
+{|add_day(%s main.cpp)
 |} day
 
-let main_cpp _day = Printf.sprintf
-{|#include <filesystem>
-#include <fstream>
+let main_cpp = Printf.sprintf
+{|// std includes
 #include <print>
 #include <ranges>
-#include <string>
 #include <string_view>
 
-std::string read_file(const std::filesystem::path& path) {
-    std::ifstream in(path);
-    if (!in) {
-        throw std::runtime_error("Cannot open file: " + path.string());
-    }
-    std::ostringstream s;
-    s << in.rdbuf();
-    return s.str();
-}
-
-[[nodiscard]] constexpr auto lines(std::string_view sv) {
-    // Remove trailing '\n'
-    while (!sv.empty() && sv.back() == '\n') sv.remove_suffix(1);
-    return sv
-        | std::views::split('\n')
-        | std::views::transform([](auto seq) { return std::string_view{seq}; });
-}
+// local
+#include <aoc_common.hpp>
 
 long long solve(std::string_view contents) {
     return 0;
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::println("Usage: program <filepath>");
-        return 1;
-    }
-
-    std::filesystem::path file_path = argv[1];
-    auto file_contents = read_file(file_path);
-
+    auto file_contents = read_input_file(argc, argv);
     std::println("{}", solve(file_contents));
 }
 |}

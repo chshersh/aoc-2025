@@ -4,6 +4,12 @@ project(aoc CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
+function(add_day dayname)
+    add_executable(${dayname} ${ARGN})
+    target_link_libraries(${dayname} PRIVATE aoc_common)
+endfunction()
+
+add_subdirectory(common)
 add_subdirectory(day01)
 add_subdirectory(day02)
 add_subdirectory(day03)

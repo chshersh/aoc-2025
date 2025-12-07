@@ -1,29 +1,9 @@
+// std includes
 #include <array>
-#include <filesystem>
-#include <fstream>
-#include <print>
-#include <ranges>
-#include <string>
-#include <string_view>
 #include <vector>
 
-std::string read_file(const std::filesystem::path& path) {
-    std::ifstream in(path);
-    if (!in) {
-        throw std::runtime_error("Cannot open file: " + path.string());
-    }
-    std::ostringstream s;
-    s << in.rdbuf();
-    return s.str();
-}
-
-[[nodiscard]] constexpr auto lines(std::string_view sv) {
-    // Remove trailing '\n'
-    while (!sv.empty() && sv.back() == '\n') sv.remove_suffix(1);
-    return sv
-        | std::views::split('\n')
-        | std::views::transform([](auto seq) { return std::string_view{seq}; });
-}
+// local
+#include <aoc_common.hpp>
 
 constexpr auto directions = std::to_array<std::pair<int, int>>({
     {-1, -1}, {-1, 0}, {-1, 1},
@@ -74,7 +54,7 @@ long long remove_accessible(
 
 long long solve(std::string_view contents) {
     std::vector<std::string> grid =
-        lines(contents)
+        aoc::lines(contents)
         | std::views::transform([](auto sv) { return std::string{sv}; })
         | std::ranges::to<std::vector>();
 
@@ -93,13 +73,6 @@ long long solve(std::string_view contents) {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::println("Usage: program <filepath>");
-        return 1;
-    }
-
-    std::filesystem::path file_path = argv[1];
-    auto file_contents = read_file(file_path);
-
+    auto file_contents = aoc::read_input_file(argc, argv);
     std::println("{}", solve(file_contents));
 }
