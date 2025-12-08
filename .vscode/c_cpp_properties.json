@@ -13,7 +13,7 @@
                 "/usr/include"
             ],
             "defines": [],
-            "compilerPath": "/usr/sbin/gcc",
+            "compilerPath": "/usr/bin/g++",
             "cStandard": "c17",
             "cppStandard": "c++23",
             "intelliSenseMode": "linux-gcc-x64"
