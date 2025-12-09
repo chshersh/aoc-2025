@@ -53,9 +53,6 @@ struct DSU {
         parent[par_a] = par_b;
         size[par_b] += size[par_a];
     }
-
-    int get_size(size_t i) { return size[get(i)]; }
-
 private:
     std::vector<size_t> parent;
     std::vector<int> size;
@@ -63,27 +60,24 @@ private:
 
 long long connect_closest(
     std::span<const Edge> edges,
-    size_t total_coords,
-    int limit
+    std::span<const Point3D> junctions
 ) {
-    DSU dsu{total_coords};
+    size_t size = junctions.size();
+    DSU dsu{size};
 
-    for (int i = 0; i < limit; ++i) {
-        Edge edge = edges[i];
-        dsu.combine(edge.from, edge.to);
+    size_t connected{};
+
+    for (const auto edge : edges) {
+        if (dsu.get(edge.from) != dsu.get(edge.to)) {
+            dsu.combine(edge.from, edge.to);
+            connected++;
+            if (connected == size - 1) {
+                return junctions[edge.from].x * junctions[edge.to].x;
+            }
+        }
     }
 
-    std::unordered_map<size_t, int> components;
-    for (size_t i = 0; i < total_coords; ++i) {
-        components[dsu.get(i)] = dsu.get_size(i);
-    }
-
-    auto sizes = components
-        | std::views::values
-        | std::ranges::to<std::vector>();
-
-    std::ranges::sort(sizes, std::greater{});
-    return sizes[0] * sizes[1] * sizes[2];
+    return 0;
 }
 
 long long solve(std::string_view contents) {
@@ -105,7 +99,7 @@ long long solve(std::string_view contents) {
     }
 
     std::ranges::sort(edges, std::less{}, &Edge::len);
-    return connect_closest(edges, coordinates.size(), 1000);
+    return connect_closest(edges, coordinates);
 }
 
 int main(int argc, char* argv[]) {
